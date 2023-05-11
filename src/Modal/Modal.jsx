@@ -13,7 +13,7 @@ const Modal = (props) => {
     <>
       <div
         className="dreamy-modal-backdrop"
-        onClick={() => props.setOpenModal(false)}
+        onClick={() => props.onCloseModal(false)}
       ></div>
       <div
         className={
@@ -23,7 +23,7 @@ const Modal = (props) => {
         {props.closeButton && (
           <button
             className="modal-closebutton"
-            onClick={() => props.setOpenModal(false)}
+            onClick={() => props.onCloseModal(false)}
           >
             <img src={CloseButton} alt="close" />
           </button>
