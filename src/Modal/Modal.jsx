@@ -1,41 +1,45 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import "./Modal.css";
 import CloseButton from "./close.svg";
 
 const Modal = (props) => {
-  Modal.defaultProps = {
-    closeButton: true,
-  };
+  const modalRef = useRef();
 
-  if (!props.openModal) return null;
+  useEffect(() => {
+    if (props.openModal) {
+      modalRef.current.showModal();
+
+      const offset = {
+        left: modalRef.current.offsetLeft,
+        top: modalRef.current.offsetTop,
+        right: modalRef.current.offsetLeft + modalRef.current.offsetWidth,
+        bottom: modalRef.current.offsetTop + modalRef.current.offsetHeight,
+      };
+
+      const dialog = document
+        .querySelector("dialog")
+        .addEventListener("click", (e) => {
+          if (
+            e.x < offset.left ||
+            e.x > offset.right ||
+            e.y < offset.top ||
+            e.y > offset.bottom
+          ) {
+            modalRef.current.close();
+            props.onCloseModal(false);
+          }
+        });
+    }
+
+    return () => {
+      modalRef.current.close();
+    };
+  }, [props.openModal]);
 
   return (
-    <>
-      <div
-        className="dreamy-modal-backdrop"
-        onClick={() => props.onCloseModal(false)}
-      ></div>
-      <div
-        className={
-          props.className ? `${props.className} dreamy-modal` : "dreamy-modal"
-        }
-      >
-        {props.closeButton && (
-          <button
-            className="modal-closebutton"
-            onClick={() => props.onCloseModal(false)}
-          >
-            <img src={CloseButton} alt="close" />
-          </button>
-        )}
-        {props.heading && (
-          <div className="modal-heading">
-            {props.heading || "dialog heading"}
-          </div>
-        )}
-        <div className="modal-body">{props.children}</div>
-      </div>
-    </>
+    <dialog ref={modalRef} className={props.className}>
+      {props.children}
+    </dialog>
   );
 };
 

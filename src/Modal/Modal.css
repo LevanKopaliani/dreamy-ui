@@ -1,3 +1,6 @@
+dialog {
+  max-width: 50%;
+}
 .dreamy-modal-backdrop {
   inset: 0;
   position: fixed;
